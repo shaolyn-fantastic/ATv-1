@@ -9,6 +9,9 @@ char RetornaOpcao(FILE* arq){
   return  fgetc(arq);
 }
 
+char EntradaDecimais(FILE *arq){
+
+}
 
  int main(int argc  , char  **argv[]) {
    typedef struct {
@@ -23,14 +26,29 @@ if(arq == NULL ){
 }
   char opcao = RetornaOpcao(arq);
   if(opcao == 'd'){
-    printf("pilha Dinamica\n");
+
   } else if(opcao=='e'){
-    printf("pilha Estatica \n");
+
   }else{
-    printf("Entrada invalida \n");
+
   }
-  PilhaEstatica p;
-  iniciaPilhaEstatica(&p);
+  /*PilhaEstatica p;
+  iniciaPilhaEstatica(&p);*/
+
+//adquirir dados do TEXTO
+  char Linha[10];
+  char *result;
+  int i;
+  i = 1;
+  while (!feof(arq))
+  {
+	// Lê uma linha (inclusive com o '\n')
+      result = fgets(Linha, 10, arq);  // o 'fgets' lê até 99 caracteres ou até o '\n'
+      if (result)  // Se foi possível ler
+	  printf("Linha %d : %s",i,Linha);
+    for(int i=0; i<)
+      i++;
+  }
 
 
   return 0;
