@@ -2,6 +2,7 @@
 #include<stdlib.h>
 #include<string.h>
 #include "Pilha-estatica.h"
+#define _GNU_SOURCE
 #define MAXTAM 8
 
 
@@ -32,7 +33,7 @@ char EntradaDecimais(FILE *arq){
    }PilhaEstatica;
 
 FILE* arq;
-arq = fopen("entrada04.txt","r");
+arq = fopen("entrada02.txt","r");
 if(arq == NULL ){
   printf("Arquivo Vazio\n");
 }
@@ -44,16 +45,16 @@ if(arq == NULL ){
   }else{
 
   }
-char caractere;
-int vetordecimais[6];
-for(int i=0; i<6; i++){
-    caractere = fgetc(arq);
-    vetordecimais[i] = caractere -'0';//converte char em int
-    if(i%2 != 0){
-    printf("vetor | %d |",vetordecimais[i]);
+  int i =0;
+  size_t len= 100; // valor arbitrário
+    char *linha= malloc(len);
+    int decimais[15];
+while (getline(&linha, &len, arq) > 0){
+  if(i>0){
+decimais[i] = atoi(linha);
+printf("%d||",decimais[i]);
+}i++;
 }
-  }
-
 
 
 
