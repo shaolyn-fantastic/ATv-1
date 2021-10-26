@@ -5,11 +5,33 @@
 #include<stdbool.h>
 #define MAXTAM 8
 int i = 0;//criação de variavel global para controlar as linhas dos vetores e matrizes
+//-----------------------------------------------------------------Pilha Estatica------------------------------------------------------------------
+
 typedef struct {
   int vetor[MAXTAM];
   int topo;
 }PilhaEstatica;
+//-----------------------------------------------------------------Pilha Estatica------------------------------------------------------------------
 
+
+//----------------------------------------------------------------pilha Dinamica------------------------------------------------------------------
+
+typedef struct NoPilha* ptrNoPilha;
+
+//int chave
+typedef struct NoPilha{
+  int chave;
+  ptrNoPilha proximo;//*noPilha Proximo
+}NoPilha;
+//----------------------------------------------------------------pilha Dinamica------------------------------------------------------------------
+
+
+typedef struct{
+  ptrNoPilha topo;
+  int qtde;
+}PilhaDinamica;
+
+//cabeçalho das Funções
 void iniciaPilhaEstatica(PilhaEstatica *pilha);
 void EmpilhaPilhaEstatica(PilhaEstatica *pilha, int x);
 int DesempilhaPilhaEstatica(PilhaEstatica* pilha);
@@ -17,6 +39,15 @@ bool EstaVaziaPilhaEstatica(PilhaEstatica *pilha);
 bool EstaCheiaPilhaEstatica(PilhaEstatica *pilha);
 int TamanhoPilhaEstatica(PilhaEstatica* pilha);
 void ImprimiPilhaEstatica(PilhaEstatica* pilha);
+
+void IniciaPilhaDinamica(PilhaDinamica* Pilha);
+bool estaVaziaPilhaDinamica(PilhaDinamica* Pilha);
+int tamanhoPilhaDinamica(PilhaDinamica* Pilha);
+void EmpilhaPilhaDinamica(PilhaDinamica* pilha, int x);
+void ImprimirPilhaDinamica(PilhaDinamica* pilha);
+int DesempilhaPilhaDinamica(PilhaDinamica* pilha);
+int ConsultaTopoPilhaDinamica(PilhaDinamica*pilha);
+void DestroiPilhaDinamica(PilhaDinamica* pilha);//falta terminar
 
 char RetornaOpcao(FILE* arq){
   return  fgetc(arq);
@@ -30,7 +61,7 @@ int ConverteDecimalParaBinarioEstatica(int* decimais){
    PilhaEstatica p;
 
 FILE* arq;
-arq = fopen("entrada02.txt","r");
+arq = fopen("entrada04.txt","r");
 if(arq == NULL ){//checagem de erro da abertura de arquivo de entrada
   printf("Arquivo de entrada Vazio\n");
 }
@@ -56,7 +87,29 @@ while (getline(&linha, &len, arq) > 0){//extração linha a linha do arquivo
 }
 i--;//menos um, por causa da primeira linha
   if(opcao == 'd'){
+    PilhaDinamica pd;
+    IniciaPilhaDinamica(&pd);
+    int resultado;
+    int contador = 0;
+    int vetorBinario[20][i];
 
+    while(i>0){
+
+      do {
+        resultado= decimais[i]%2;//metodo usado para transforma um decimal em binario
+        EmpilhaPilhaDinamica(&pd,resultado);
+        decimais[i]=decimais[i]/2;
+
+        contador++;
+      }
+      while(decimais[i]>0);
+      for(contador; contador > 0; contador--){
+        vetorBinario [i][contador] = DesempilhaPilhaDinamica(&pd);
+        fprintf(saida,"%d",vetorBinario[i][contador]);
+      }//for
+      fprintf(saida,"\n");
+      i--;
+    }//while controla o vetor
 
   } //if dinamica
     else if(opcao == 'e'){
@@ -72,7 +125,6 @@ i--;//menos um, por causa da primeira linha
           resultado= decimais[i]%2;//metodo usado para transforma um decimal em binario
           EmpilhaPilhaEstatica(&p,resultado);
           decimais[i]=decimais[i]/2;
-          //ImprimiPilhaEstatica(&p);
           contador++;
         }
         while(decimais[i]>0);
@@ -95,9 +147,9 @@ fclose(arq);
 fclose(saida);
   return 0;
 }//main
-//------------------------------------------------------------------------------------------------------------------------------------------------
-//------------------------------------------------------------------------------------------------------------------------------------------------
-//------------------------------------------------------------------------------------------------------------------------------------------------
+//-----------------------------------------------------------------Pilha Estatica------------------------------------------------------------------
+//----------------------------------------------------------------Pilha Estatica------------------------------------------------------------------
+//--------------------------------------------------------------Pilha Estatica------------------------------------------------------------------
 void iniciaPilhaEstatica(PilhaEstatica *pilha){
   pilha->topo = 0;//primeira posição na inserção na pilha é a posição 0 do vetor
   }
@@ -161,3 +213,94 @@ void ImprimiPilhaEstatica(PilhaEstatica* pilha){
   }
   printf("}\n");
 }
+
+
+
+//------------------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------------------------------
+//------------------------------------------------------------------------------------------------------------------------------------------------
+//----------------------------------------------------------------pilha Dinamica------------------------------------------------------------------
+  //1- definir tipos
+  //PilhaDinamica
+//-------------------------------------------
+//NoPilha
+
+    //-------------------------------------------
+//*NoPilha topo
+//int quantidade de elementos
+
+  //2- funções//operações
+  //inicializa a pilha
+    void IniciaPilhaDinamica(PilhaDinamica* Pilha){
+    //ponteiro do topo aponta para NULL
+    Pilha->topo = NULL;
+    //qtde de elementos inicia em 0
+    Pilha->qtde = 0;
+  }
+  //Verifica se a pilha esta vazia
+  bool estaVaziaPilhaDinamica(PilhaDinamica* Pilha){
+    return(Pilha->topo == NULL);
+    //return(PilhaDinamica->qtde == 0); mesma coisa
+  }
+  // retorna o tamanho da Pilha
+  int tamanhoPilhaDinamica(PilhaDinamica* Pilha){
+    return(Pilha->qtde);
+  }
+  //inserir elementos
+  void EmpilhaPilhaDinamica(PilhaDinamica* pilha, int x){
+    //criar um novo nó
+    ptrNoPilha aux;//novo nó
+    aux = malloc(sizeof(NoPilha));//alocar memoria
+
+    //copiar o valor inserido no novo nó
+    aux->chave = x;
+
+    //proximo do novo nó aponta para quem o topo apontava
+    aux->proximo = pilha->topo;
+
+    //topo aponta para o novo nó
+    pilha->topo = aux;
+
+    //incremeta a quantidade de elementos
+    pilha->qtde++;
+  }
+  //printar a Pilha
+  void ImprimirPilhaDinamica(PilhaDinamica* pilha){
+    ptrNoPilha percorre;
+    for(percorre = pilha->topo; percorre!= NULL; percorre = percorre->proximo){
+        printf("|%d",percorre->chave);
+      }
+      printf("|\n");
+  }
+
+  //remover elemento
+  int DesempilhaPilhaDinamica(PilhaDinamica* pilha){
+    //vazia == FALSE
+    int ret = pilha->topo->chave;
+    if(!estaVaziaPilhaDinamica(pilha)){
+      //copia o valor que será retornado
+      //cria um nó auxiliar
+      ptrNoPilha aux;
+      // aux aponta para o topo
+      aux = pilha->topo;
+      //topo aponta para o proximo do topo
+      pilha->topo = pilha->topo->proximo;
+      //desaloca memoria do aux
+      free(aux);
+      //decrementa qtde
+      pilha->qtde--;
+    }else{
+      printf("não pode ser removido");
+    }
+    //retorna o valor para usuario
+    return ret;
+  }
+  //pesquisar elementos(consulta o topo)
+int ConsultaTopoPilhaDinamica(PilhaDinamica*pilha){
+  int x ;
+  return x = pilha->topo->chave;
+}
+  //destruir a Pilha
+  void DestroiPilhaDinamica(PilhaDinamica* pilha){
+    free(pilha);
+  }
