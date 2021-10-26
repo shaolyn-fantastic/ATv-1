@@ -61,13 +61,13 @@ int ConverteDecimalParaBinarioEstatica(int* decimais){
    PilhaEstatica p;
 
 FILE* arq;
-arq = fopen("entrada04.txt","r");
+arq = fopen(argv[1],"r");
 if(arq == NULL ){//checagem de erro da abertura de arquivo de entrada
   printf("Arquivo de entrada Vazio\n");
 }
 
 FILE* saida;
-saida = fopen("saida.txt","w");
+saida = fopen(argv[2],"w");
 if(arq == NULL ){//checagem de erro da abertura de arquivo de entrada
   printf("Erro ao abrir arquivo de saida\n");
 }
@@ -139,7 +139,7 @@ i--;//menos um, por causa da primeira linha
 
 
   }//if estatica
-else{printf("opção errada\n");
+else{printf("opcao errada\n");
 }
 
 //adquirir dados do TEXTO
